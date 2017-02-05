@@ -1,0 +1,257 @@
+using System;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+namespace ruriclean
+{
+    public partial class Form1 : Form
+    {
+        [DllImport("user32.dll")]
+        public static extern int FindWindowEx(int hWnd1, int hWnd2, string lpsz1, string lpsz2);
+
+        [DllImport("user32.dll")]
+        public static extern int FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll")]
+        public static extern int SendMessage(int hWnd, int Msg, int wParam, int lParam);
+
+        WebBrowser web = new WebBrowser();
+
+        Double page_num;
+        Double comment_num;
+
+        int delay_value = 100;
+
+        class data_parse//webbrowser에서 값을 가져오기
+        {
+            public string[] call_of_textdata_by_class(WebBrowser web, string tag, string className, int data_num)
+            {
+                int k = 0;
+                System.Windows.Forms.HtmlDocument Doc = web.Document;
+                string[] arr = new string[data_num];
+
+                for (int q = 0; q < Doc.GetElementsByTagName(tag).Count; q++)
+                    if (Doc.GetElementsByTagName(tag)[q].GetAttribute("className") == className)
+                    {
+                        arr[k] = Doc.GetElementsByTagName(tag)[q].InnerText;
+                        k++;
+                    }
+                return arr;
+            }//특정 텍스트 값만 가져올때
+            public string[] call_of_htmldata_by_class(WebBrowser web, string tag, string className, int data_num)
+            {
+                int k = 0;
+                System.Windows.Forms.HtmlDocument Doc = web.Document;
+                string[] arr = new string[data_num];
+                for (int q = 0; q < Doc.GetElementsByTagName(tag).Count; q++)
+                    if (Doc.GetElementsByTagName(tag)[q].GetAttribute("className")==className)
+                    {
+                        arr[k] = Doc.GetElementsByTagName(tag)[q].InnerHtml;
+                        k++;
+                    }
+                return arr;
+            }//특정 태그 안에 있는 모든 html소스를 가져올때
+            public string call_of_data_by_id(WebBrowser web, string id)//id를 통한 값 가져오기
+            {
+                return web.Document.GetElementById(id).InnerText;
+            }
+        }
+
+        public Form1()
+        {
+            InitializeComponent();
+            web.Navigate("https://user.ruliweb.com/member/login");
+            del_panel.Hide();
+
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            timer.Interval = 300;//0.3초간격
+            timer.Tick += new EventHandler(timer_tick);
+            timer.Start();
+        }
+        void timer_tick(object sender, System.EventArgs e)
+        {
+            messagebox_control mc = new messagebox_control();
+            mc.Click_message_1();
+            mc.Click_message_2();
+        }
+        private static DateTime Delay(int MS)//딜레이 ms(밀리초) 단위
+        {
+            DateTime ThisMoment = DateTime.Now;
+            TimeSpan duration = new TimeSpan(0, 0, 0, 0, MS);
+            DateTime AfterWards = ThisMoment.Add(duration);
+
+            while (AfterWards >= ThisMoment)
+            {
+                System.Windows.Forms.Application.DoEvents();
+                ThisMoment = DateTime.Now;
+            }
+
+            return DateTime.Now;
+        }
+        public class messagebox_control
+        {
+            const int WM_LBUTTONDOWN = 0x2201;
+            const int WM_LBUTTONUP = 0x0202;
+            const int BM_CLICK = 0x00F5;
+
+            public void Click_message_1 ()
+            {
+                int nhwnd = FindWindow("#32770", "웹 페이지 메시지");
+                if(nhwnd>0)
+                {
+                    int hw1 = FindWindowEx(nhwnd, 0, "DirectUIHWND", "");
+                    if(hw1>0)
+                    {
+                        int hw2 = FindWindowEx(hw1, 0, "CtrlNotifySink", "");
+                        if(hw2>0)
+                        {
+                            while(true)
+                            {
+                                int hw3 = FindWindowEx(hw2, 0, "Button", "확인");
+                                if (hw3>0)
+                                {
+                                    SendMessage(hw3, BM_CLICK, 0, 1);
+                                    break;
+                                }
+                                hw2 = FindWindowEx(hw1, hw2, "CtrlNotifySink", "");
+                                if (hw2==0)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            public void Click_message_2()
+            {
+                int nhwnd = FindWindow("#32770", "웹 페이지 메시지");
+                if (nhwnd > 0)
+                {
+
+                    while (true)
+                    {
+                        int hw1 = FindWindowEx(nhwnd, 0, "Button", "확인");
+                        if (hw1 > 0)
+                        {
+                            SendMessage(hw1, BM_CLICK, 0, 1);
+                            break;
+                        }
+                        hw1 = FindWindowEx(hw1, 0, "CtrlNotifySink", "");
+                        if (hw1 == 0)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+        private void login_panel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void login_Click(object sender, EventArgs e)
+        {
+            web.Document.GetElementById("user_id").SetAttribute("Value", ID.Text);
+            web.Document.GetElementById("user_pw").SetAttribute("Value", password.Text);
+            web.Document.GetElementById("login_submit").InvokeMember("click");
+            
+
+            Delay(2000);
+            if (!web.Url.ToString().Contains("error"))//로그인 성공확인부분
+            {
+                login_panel.Hide();
+                del_panel.Show();
+                clean();
+            }    
+        }
+        private void clean()
+        {
+            data_parse dp = new data_parse();
+            web.Navigate("http://bbs.ruliweb.com/member/mypage");
+            Delay(delay_value*20);
+
+            string[] arr = dp.call_of_htmldata_by_class(web, "strong", "activity_value",5);
+            string[] act = {"작성 게시글","삭제 게시글","작성 댓글", "삭제 댓글","추천수" };
+
+            page_num =(Convert.ToInt16(arr[0])- Convert.ToInt16(arr[1])) / 30;//한 페이지당 30개의 게시물을 보여줌
+            comment_num= (Convert.ToInt16(arr[2]) - Convert.ToInt16(arr[3])) / 30;
+
+            for (int i=0;arr.Length>i;i++)
+                text.Text+=act[i]+" : "+arr[i] +"개 \r\n";
+            //게시글 댓글 갯수 가져오기
+        }
+        private void post_del_Click(object sender, EventArgs e)
+        {
+            data_parse dp = new data_parse();
+            messagebox_control mc = new messagebox_control();
+            web.ScriptErrorsSuppressed = true;
+
+
+            for (int r = 1; r < page_num; r++)
+            {
+                web.Navigate("http://bbs.ruliweb.com/member/mypage/myarticle");
+                Delay(delay_value*35);
+                string[] arr = dp.call_of_htmldata_by_class(web, "td", "subject field", (page_num - r < 0) ? Convert.ToInt16(Convert.ToInt16((r - page_num) / 0.0333)) : 30);
+                //삭제할 게시물 html 소스 가져오기
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    string arr_split = arr[i].Split('/')[7];
+                    arr[i] = arr_split.Split('"')[0];
+                }//삭제할 게시물 article-id 가져오기
+                
+                for (int i = 0; i < arr.Length;i++)
+                {
+                    System.Windows.Forms.HtmlDocument Doc = web.Document;
+                    
+                    Delay(delay_value*9);
+                    for (int q = 0; q < Doc.GetElementsByTagName("div").Count; q++)
+                        if (Doc.GetElementsByTagName("div")[q].GetAttribute("article-id") == arr[i])
+                        {
+                   
+                            Doc.GetElementsByTagName("div")[q].InvokeMember("Click");//삭제클릭
+                        }
+                }
+            }
+            MessageBox.Show("끝");
+        }
+        private void comment_del_Click(object sender, EventArgs e)
+        {
+            data_parse dp = new data_parse();
+            messagebox_control mc = new messagebox_control();
+            web.ScriptErrorsSuppressed = true;
+
+
+            for (int r = 1; r < comment_num; r++)
+            {
+                web.Navigate("http://bbs.ruliweb.com/member/mypage/mycomment");
+                Delay(delay_value*35);
+                string[] arr = dp.call_of_htmldata_by_class(web, "td", "comment field text_over", (comment_num - r < 0) ? Convert.ToInt16(Convert.ToInt16((r - comment_num) / 0.0333)) : 30);
+                //삭제할 게시물 html 소스 가져오기
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    string arr_split = arr[i].Split('/')[7];
+                    arr[i] = arr_split.Split('"')[0];
+                }//삭제할 댓글 article-id 가져오기
+                
+                for (int i = 0; i < arr.Length; i++)
+                {
+                    System.Windows.Forms.HtmlDocument Doc = web.Document;
+
+                    Delay(delay_value*9);
+                    for (int q = 0; q < Doc.GetElementsByTagName("div").Count; q++)
+                        if (Doc.GetElementsByTagName("div")[q].GetAttribute("article-id") == arr[i])
+                        {
+                            Doc.GetElementsByTagName("div")[q].InvokeMember("Click");//삭제클릭
+                        }
+                }
+            }
+            MessageBox.Show("끝");
+        }
+        private void plus_delay_Click(object sender, EventArgs e)
+        {
+            delay_value = 130;
+        }
+    }
+}
