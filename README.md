@@ -8,3 +8,5 @@
 대략 게시글 한개를 삭제하는데 1초가 걸립니다. 즉 작성한 게시글이 3600개인경우는 약 1시간이 걸립니다.
 <br>프로그램이 삭제하는 도중에는 그 아이디로 게시물을 작성하지마세요 다른 활동은 상관이 없습니다.</br>
 <img src="http://i2.ruliweb.com/ori/17/01/19/159b57c3b7f19d5e2.gif" alt="작동.gif">
+
+Download Link : https://drive.google.com/file/d/0B8kyxxKO1Tz0eUd2Y05IdHd1bnc/view?usp=sharing
