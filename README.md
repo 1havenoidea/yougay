@@ -3,10 +3,14 @@
 
 프로그램 사용법은
 처음 프로그램을 실행하면 아이디와 비밀번호를 입력한뒤 아이디와 비밀번호가 옳으면 다음 진행단계로 가며 틀린 경우에는 다시 입력해줘야합니다.
+
 ###다만 네이버 아이디로 가입한 경우에는 작동하지 않습니다.
+
 그렇게 다음단계에서는 지금까지 쓴 글의 목록과 댓글등 기타 목록이 표시되며 원하는 기능의 버튼을 선택하여 작동하시면됩니다.
+
 대략 게시글 한개를 삭제하는데 1초가 걸립니다. 즉 작성한 게시글이 3600개인경우는 약 1시간이 걸립니다.
-<br>프로그램이 삭제하는 도중에는 그 아이디로 게시물을 작성하지마세요 다른 활동은 상관이 없습니다.</br>
+
+<br>프로그램이 삭제하는 도중에는 그 아이디로 게시물을 작성하지마세요 프로그램 작동 중 웹서핑 외에는 다른 활동에 지장이 있습니다. 컴퓨터를 오래 켜두거나 자기전에 실행해주세요.</br>
 <img src="http://i2.ruliweb.com/ori/17/01/19/159b57c3b7f19d5e2.gif" alt="작동.gif">
 
-Download Link : https://drive.google.com/file/d/0B8kyxxKO1Tz0eUd2Y05IdHd1bnc/view?usp=sharing
+Download Link : https://drive.google.com/file/d/1Lsbs394j_p7FgWxmCXYSXfMj79p9Rzrq/view?usp=sharing
