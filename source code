@@ -18,7 +18,6 @@ namespace cleanyougay
 
         WebBrowser web = new WebBrowser();
 
-
         int page_num;
         int comment_num;
 
@@ -153,14 +152,22 @@ namespace cleanyougay
             web.Document.GetElementById("user_id").SetAttribute("Value", ID.Text);
             web.Document.GetElementById("user_pw").SetAttribute("Value", password.Text);
             web.Document.GetElementById("login_submit").InvokeMember("click");
+            data_parse dp = new data_parse();
 
             Delay(2000);
+            web.Navigate("http://bbs.ruliweb.com/member/mypage");
+            Delay(2000);
             web.ScriptErrorsSuppressed = true;
-            if (!web.Url.ToString().Contains("error"))//로그인 성공확인부분
+            if (dp.call_of_htmldata_by_class(web, "strong", "activity_value", 6)[0] != null)
             {
                 login_panel.Hide();
                 main_panel.Show();
                 clean();
+            }
+            else 
+            {
+                MessageBox.Show("아이디 혹은 비밀번호를 다시 확인해주세요.");
+                web.Navigate("https://user.ruliweb.com/member/login");
             }
         }
         private void clean()
