@@ -200,8 +200,8 @@ namespace cleanyougay
             int sum_del_time = 0;
             int del_count = 1;
             Double avg_del_time = 0;
-            Stopwatch stopwatch = new Stopwatch(); //객체 선언
-            stopwatch.Start(); // 시간측정 시작
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             while (page_num != 0)
             {
@@ -215,8 +215,6 @@ namespace cleanyougay
                     for (int q = 0; q < Doc.GetElementsByTagName("div").Count; q++)
                         if (Doc.GetElementsByTagName("div")[q].GetAttribute("article-id").Length > 2)
                         {
-                            //MessageBox.Show("dd3");
-
                             if (page_num - (Convert.ToInt16(arr[0]) - Convert.ToInt16(arr[1])) >= 1)
                             {
                                 stopwatch.Stop();
@@ -228,7 +226,7 @@ namespace cleanyougay
                                 this.expect_time.Text = Math.Ceiling(((avg_del_time) * (page_num)) / (1000 * 60)).ToString();
                                 del_count++;
                                 stopwatch.Reset();
-                                stopwatch.Start(); // 시간측정 시작
+                                stopwatch.Start();
                             }
                             Doc.GetElementsByTagName("div")[q].InvokeMember("Click");//삭제클릭
                         }
@@ -248,8 +246,8 @@ namespace cleanyougay
             int sum_del_time = 0;
             int del_count = 1;
             Double avg_del_time = 0;
-            Stopwatch stopwatch = new Stopwatch(); //객체 선언
-            stopwatch.Start(); // 시간측정 시작
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             while (comment_num!=0)
             {
@@ -275,7 +273,7 @@ namespace cleanyougay
                                 this.expect_time.Text = Math.Ceiling(((avg_del_time) * (comment_num)) / (1000 * 60)).ToString();
                                 del_count++;
                                 stopwatch.Reset();
-                                stopwatch.Start(); // 시간측정 시작
+                                stopwatch.Start(); 
                             }
                             Doc.GetElementsByTagName("div")[q].InvokeMember("Click");//삭제클릭
                         }
