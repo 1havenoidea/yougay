@@ -13,4 +13,4 @@
 <br>프로그램이 삭제하는 도중에는 그 아이디로 게시물을 작성하지마세요 프로그램 작동 중에는 컴퓨터 사용에 불편이 있을 수 있습니다. 컴퓨터를 오래 켜두거나 자기전에 실행해주세요.</br>
 <img src="http://i2.ruliweb.com/ori/17/01/19/159b57c3b7f19d5e2.gif" alt="작동.gif">
 
-Download Link : https://drive.google.com/file/d/1Lsbs394j_p7FgWxmCXYSXfMj79p9Rzrq/view?usp=sharing
+Download Link : https://drive.google.com/file/d/1-1hOQZimcx9lJK-Ssq0h0YPoh2hApc0n/view?usp=sharing
